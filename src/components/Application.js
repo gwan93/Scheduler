@@ -60,6 +60,7 @@ export default function Application(props) {
         });
         return res;
       });
+  
   }
 
   const cancelInterview = (id) => {
@@ -81,6 +82,7 @@ export default function Application(props) {
       });
       return res;
     });
+
   };
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
