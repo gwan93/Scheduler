@@ -2,61 +2,10 @@ import React, {useState, useEffect} from "react";
 import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment/index";
-const { getAppointmentsForDay, getInterview } = require('helpers/selectors');
-
+const { getAppointmentsForDay, getInterview, getInterviewersForDay } = require('helpers/selectors');
 const axios = require('axios').default;
 
-// const appointments = [
-//   {
-//     id: 1,
-//     time: "12pm",
-//   },
-//   {
-//     id: 2,
-//     time: "1pm",
-//     interview: {
-//       student: "Lydia Miller-Jones",
-//       interviewer: {
-//         id: 1,
-//         name: "Sylvia Palmer",
-//         avatar: "https://i.imgur.com/LpaY82x.png",
-//       }
-//     }
-//   },
-//   {
-//     id: 3,
-//     time: "2pm",
-//   },
-//   {
-//     id: 4,
-//     time: "3pm",
-//     interview: {
-//       student: "Archie Cohen",
-//       interviewer: {
-//         id: 2,
-//         name: "Tori Malcolm",
-//         avatar: "https://i.imgur.com/LpaY82x.png",
-//       }
-//     }
-//   },
-//   {
-//     id: 5,
-//     time: "4pm",
-//     interview: {
-//       student: "Maria Boucher",
-//       interviewer: {
-//         id: 3,
-//         name: "Mildred Nazir",
-//         avatar: "https://i.imgur.com/LpaY82x.png",
-//       }
-//     }
-//   }
-// ];
-
 export default function Application(props) {
-
-  // const [currentDay, setDay] = useState("Monday")
-  // const [days, setDays] = useState([]);
 
   const [state, setState] = useState({
     day: "Monday",
@@ -66,26 +15,20 @@ export default function Application(props) {
   })
 
   const setDay = day => setState({ ...state, day });
-  // const setDays = days => setState(prev => ({ ...prev, days }));
-  let dailyAppointments = [];
+  // const onClick = (day) => setDay(day);
 
   useEffect(() => {
-    // axios.get("http://localhost:8001/api/days")
-    // .then(response => {
-    //   setDays(response.data);
-    // })
 
     Promise.all([
-      axios.get("http://localhost:8001/api/days"),
-      axios.get("http://localhost:8001/api/appointments"),
-      axios.get("http://localhost:8001/api/interviewers")
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers")
 
     ])
     .then(all => {
       
       const [daysData, appointmentsData, interviewersData] = all;
-
-      console.log(interviewersData.data)
+     
       setState(prev => ({
         ...prev,
         days: daysData.data,
@@ -98,19 +41,65 @@ export default function Application(props) {
 
   }, [])
 
-  const onClick = (day) => {
-    setDay(day)
+  const bookInterview = (id, interview) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    
+    return axios.put(`/api/appointments/${id}`, appointment)
+      .then(res => {
+        setState({
+          ...state,
+          appointments
+        });
+        return res;
+      });
   }
 
-  dailyAppointments = getAppointmentsForDay(state, state.day);
+  const cancelInterview = (id) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    return axios.delete(`/api/appointments/${id}`)
+    .then(res => {
+      setState({
+        ...state,
+        appointments
+      });
+      return res;
+    });
+  };
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
+
+
   const timeSlot = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
+    // console.log(interview)
 
     return (
       <Appointment 
-      key={appointment.id}
-      {...appointment}
-    />
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+        interviewers={interviewers}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview} />
     )
   })
 
@@ -128,7 +117,7 @@ export default function Application(props) {
           <DayList
             days={state.days}
             day={state.day}
-            setDay={onClick}
+            setDay={setDay}
           />
         </nav>
         <img
@@ -140,7 +129,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {timeSlot}
-        <Appointment key="last" time="5pm" />
+        <Appointment key="last" time="5pm"/>
       </section>
     </main>
   );
