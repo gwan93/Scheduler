@@ -1,40 +1,16 @@
 import {useEffect, useReducer } from 'react';
 import axios from 'axios';
+import reducer, {
+  SET_DAY,
+  SET_APPLICATION_DATA,
+  SET_INTERVIEW
+} from "reducers/application";
 const { getAppointmentsForDay } = require('helpers/selectors');
 
 
 export default function useApplicationData() {
 
-  // ********** using useRender:
-
-  // initializing constants to be used in switch/case
-  const SET_DAY = "SET_DAY";
-  const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-  const SET_INTERVIEW = "SET_INTERVIEW";
-
-  function reducer(state, action) {
-    switch (action.type) {
-      case SET_DAY:
-        // when dispatch({ type: SET_DAY}) is called,
-        // the following line updates the state with 
-        // the day as action.day
-        // (action.day was passed from the dispatch)
-        return {  ...state, day: action.day  }
-      case SET_APPLICATION_DATA:
-        return { 
-          ...state,
-          days: action.days,
-          appointments: action.appointments,
-          interviewers: action.interviewers
-        }
-      case SET_INTERVIEW: 
-        return { ...state, appointments: action.appointments };
-      default:
-        throw new Error(
-          `Tried to reduce with unsupported action type: ${action.type}`
-        );
-    }
-  }
+  // ********** using useReducer:
 
   const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
@@ -58,12 +34,12 @@ export default function useApplicationData() {
     // };
 
     testSocket.onmessage = function (event) {
-      console.log('Message received from server:', event.data);
+      // console.log('Message received from server:', event.data);
 
       const parsedResponse = JSON.parse(event.data);
 
       if (parsedResponse.type === SET_INTERVIEW) {
-        console.log('it is a set_interview', parsedResponse)
+        // console.log('it is a set_interview', parsedResponse)
         const { id, interview } = parsedResponse;
 
         // console.log(id)
