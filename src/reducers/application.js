@@ -5,12 +5,12 @@
 
   export default function reducer(state, action) {
     switch (action.type) {
-      case SET_DAY:
-        // when dispatch({ type: SET_DAY}) is called,
-        // the following line updates the state with 
-        // the day as action.day
-        // (action.day was passed from the dispatch)
-        return {  ...state, day: action.day  }
+      // case SET_DAY:
+      //   // when dispatch({ type: SET_DAY}) is called,
+      //   // the following line updates the state with 
+      //   // the day as action.day
+      //   // (action.day was passed from the dispatch)
+      //   return {  ...state, day: action.day  }
       case SET_APPLICATION_DATA:
         return { 
           ...state,

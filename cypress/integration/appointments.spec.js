@@ -7,7 +7,7 @@ describe("Appointments", () => {
   })
 
 
-  it.skip("Should book an interview", () => {
+  it("Should book an interview", () => {
 
     cy.get("[alt='Add']")
       .first()  
