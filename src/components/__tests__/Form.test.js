@@ -36,7 +36,7 @@ describe("Form", () => {
     /* 3. Click the save button */
     fireEvent.click(getByText("Save"));
 
-    /* 4. validation is shown */
+    /* 4. validation is shown. regex is used here */
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
   
     /* 5. onSave is not called */

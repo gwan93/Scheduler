@@ -12,12 +12,12 @@ export default function DayList(props) {
         spots={day.spots}
         setDay={props.setDay}
       />
-    )
-  })
+    );
+  });
 
   return (
     <ul>
       {dayItem}
     </ul>
-  )
-}
+  );
+};

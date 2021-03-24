@@ -16,8 +16,8 @@ export default function useVisualMode(initial) {
     }
 
     setMode(newMode);
-    dummyHistory.push(newMode)
-    setHistory(dummyHistory)
+    dummyHistory.push(newMode);
+    setHistory(dummyHistory);
 
   }
 
@@ -34,6 +34,5 @@ export default function useVisualMode(initial) {
     })
   }
   
-
   return { mode, transition, back };
 }

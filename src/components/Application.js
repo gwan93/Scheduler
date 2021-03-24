@@ -31,7 +31,7 @@ export default function Application(props) {
         bookInterview={bookInterview}
         cancelInterview={cancelInterview} />
     )
-  })
+  });
 
   return (
     <main className="layout">
@@ -63,4 +63,4 @@ export default function Application(props) {
       </section>
     </main>
   );
-}
+};

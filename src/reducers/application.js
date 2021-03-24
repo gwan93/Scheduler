@@ -10,19 +10,19 @@
         // the following line updates the state with 
         // the day as action.day
         // (action.day was passed from the dispatch)
-        return {  ...state, day: action.day  }
+        return {  ...state, day: action.day  };
       case SET_APPLICATION_DATA:
         return { 
           ...state,
           days: action.days,
           appointments: action.appointments,
           interviewers: action.interviewers
-        }
+        };
       case SET_INTERVIEW: 
         return { ...state, appointments: action.appointments };
       default:
         throw new Error(
           `Tried to reduce with unsupported action type: ${action.type}`
         );
-    }
-  }
+    };
+  };

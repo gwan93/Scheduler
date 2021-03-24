@@ -1,3 +1,7 @@
+// Data here is to be used with Cypress End-to-End testing
+// This file includes fixed data as well as faked axios requests
+// that will return resolved promises along with the requested data
+
 const fixtures = {
   days: [
     {

@@ -34,16 +34,11 @@ export default function useApplicationData() {
     // };
 
     testSocket.onmessage = function (event) {
-      // console.log('Message received from server:', event.data);
 
       const parsedResponse = JSON.parse(event.data);
 
       if (parsedResponse.type === SET_INTERVIEW) {
-        // console.log('it is a set_interview', parsedResponse)
         const { id, interview } = parsedResponse;
-
-        // console.log(id)
-        // console.log(interview)
 
         const appointment = {
           ...state.appointments[id],
@@ -61,7 +56,7 @@ export default function useApplicationData() {
       }
     }
     return () => testSocket.close();
-  })
+  });
 
   useEffect(() => {
     Promise.all([
@@ -74,26 +69,26 @@ export default function useApplicationData() {
       const days = daysData.data;
       const appointments = appointmentsData.data;
       const interviewers = interviewersData.data;
-      dispatch({ type: SET_APPLICATION_DATA, days, appointments, interviewers})
+      dispatch({ type: SET_APPLICATION_DATA, days, appointments, interviewers });
     })
-    .catch(error => console.log('error', error))
-  }, [])
+    .catch(error => console.log('error', error));
+  }, []);
 
   const updateRemainingSpots = (state, appointments) => {
-    const dummyState = {...state, appointments}
-    const numAppts = getAppointmentsForDay(dummyState, state.day)
+    const dummyState = {...state, appointments};
+    const numAppts = getAppointmentsForDay(dummyState, state.day);
     let remainingSpots = 0;
     for (const numAppt of numAppts) {
       if (!numAppt.interview) {
         remainingSpots ++;
       }
-    }
+    };
 
     for (const day of dummyState.days) {
       if (day.name === state.day) {
         day['spots'] = remainingSpots;
-      }
-    }
+      };
+    };
   };
   
   const bookInterview = (id, interview) => {
